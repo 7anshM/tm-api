@@ -1,14 +1,26 @@
+const Firebase=require('../Firebase/firebase')
+
 class Crud{
-    addToDatabase(user,path){
-        this.createPath(path);
+
+    static setUpFirebaseApp(){
+        if(Crud.FirebaseApp == null)
+            Crud.FirebaseApp=Firebase;
+    }
+    static async addToDatabase(userId, path, data) {
+        await Crud.setUpFirebaseApp();
+        if (userId == null) {
+            Crud.FirebaseApp.setData(path, null, null, data);
+        }
+        else{
+            console.log('Hi');
+            console.log(path);
+            return Crud.FirebaseApp.setData(path, null, false, data);
+        }
 
     }
-
-
-    createPath(path) {
-        let link=''
-        for(let i=0;i<path.size;i++){
-            link+=(path[i]+'/')
-        }
+    static async getFromDatabase(path) {
+        await Crud.setUpFirebaseApp();
+        return await Crud.FirebaseApp.getData('/' + path);
     }
 }
+module.exports=Crud;
